@@ -1,0 +1,382 @@
+/**
+ * Created by WardVdd on 22/03/2017.
+ */
+var selectedCountries = null;
+var questions = null;
+var indexQuestion = 0;
+var currentScore = 0;
+var currentRegion;
+var formErrors = 0;
+var formErrorMessages = [];
+
+function displayMenu(){
+    $('#options').toggleClass('hide');
+}
+
+function displayRegions(){
+    $('#regions').toggleClass('hide');
+}
+
+function getQuestions(){
+    currentRegion = $(this).attr("data-region");
+    currentRegion = currentRegion.toLowerCase();
+
+    var url = 'https://restcountries.eu/rest/v2/region/' + currentRegion;
+
+    fetch(url)
+        .then(function(response) {
+            response.json().then(function(responseJson) {
+                setQuestions(responseJson);
+            });
+        });
+}
+
+function setQuestions(questions){
+    console.log(questions);
+    selectedCountries = getRandom(questions,20);
+    selectedCountries = selectedCountries.map(removeUnnessecaryInformation);
+    console.log(selectedCountries);
+    displayRegions();
+    displayQuestion();
+}
+
+function displayQuestion(){
+    if(selectedCountries != null){
+        if(indexQuestion < selectedCountries.length){
+            $('div.question').remove();
+            var questionAsDiv = questionToDiv(selectedCountries[indexQuestion]);
+            $('div.wrapper').append(questionAsDiv);
+            $('#returnHomeFromQuestion').on('click', returnHomeFromQuestion)
+            setEventHandlerQuestion();
+        } else{
+            //game finished
+            compareScoreRegion();
+            showEndMessage();
+        }
+    }
+}
+
+function showEndMessage(){
+    $('div.question').remove();
+
+    var message = "<div id='endMessage'>";
+    message += "<figure class='trophy'><img src='images/trophy.png' alt='trophy' title='trophy'/>";
+    message += "<figcaption class='endGame'>Congratulations!</figcaption>";
+    message += "</figure>";
+    message += "<p class='endScore'>You scored " + currentScore + " out of 20 questions</p>";
+    message += "<button type='button' class='btn btn-secondary' id='homeButton' name='homeButton'>Home</button>";
+    message += "</div>";
+
+    $('div.wrapper').append(message);
+
+    $('#homeButton').on('click', function(){
+        $('#endMessage').remove();
+        indexQuestion = 0;
+        $('#options').toggleClass("hide");
+    })
+
+}
+
+function getPossibleAnswers(){
+    var answers = getRandom(selectedCountries, 4);
+    var goodAnswer = selectedCountries[indexQuestion];
+    while(answers.indexOf(goodAnswer) < 0){
+        answers = getRandom(selectedCountries, 4);
+    }
+    return answers;
+}
+
+function questionToDiv(question){
+    var possibleAnswers = getPossibleAnswers();
+    var div = "<div class='question'>";
+    div += "<img src='images/home-white.png' id='returnHomeFromQuestion' title='home button' alt='home button'/>";
+    div += "<h3>Question " + (indexQuestion + 1) + " of " + selectedCountries.length + "</h3>";
+    div += question.img;
+    div += "<div id=possAnswers>";
+    for(var i = 0; i < possibleAnswers.length; i++){
+        div += "<button type='button' class='btn btn-secondary answer'>" + possibleAnswers[i].name + "</button>";
+    }
+    div += "</div>";
+    div += "</div>";
+
+
+    return div;
+}
+
+function setEventHandlerQuestion(){
+    $('#possAnswers button').on('click', checkInput);
+}
+
+function checkInput(){
+    var flagUrl = $("#currentFlag").attr('src');
+    var solution = selectedCountries.filter(q => q.flag == flagUrl)[0].name.toLowerCase();
+    var answer = $(this).text().toLowerCase();
+
+    if(solution === answer){
+        currentScore++;
+    }
+    indexQuestion++;
+    displayQuestion();
+}
+
+
+function getRandom(arr, n) {
+    var result = new Array(n),
+        len = arr.length,
+        taken = new Array(len);
+    if (n > len)
+        throw new RangeError("getRandom: more elements taken than available");
+    while (n--) {
+        var x = Math.floor(Math.random() * len);
+        result[n] = arr[x in taken ? taken[x] : x];
+        taken[x] = --len in taken ? taken[len] : len;
+    }
+    return result;
+}
+
+function removeUnnessecaryInformation(item){
+    var updatedItem = {name: item.name, flag: item.flag, img: getImage(item.flag, item.name)};
+    return updatedItem;
+}
+
+function getImage(flagUrl, name){
+    var img = "<img id='currentFlag' src='" + flagUrl + "' alt='flag'>";
+    return img;
+}
+
+function getCurrentDate(){
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1; //January is 0!
+    var yyyy = today.getFullYear();
+
+    if(dd<10) {
+        dd = '0'+dd
+    }
+
+    if(mm<10) {
+        mm = '0'+mm
+    }
+
+    today = dd + '/' + mm + '/' + yyyy;
+    return today;
+}
+
+//Indexed DB
+
+window.indexedDB =
+    window.indexedDB ||
+    window.mozIndexedDB ||
+    window.webkitIndexedDB ||
+    window.msIndexedDB;
+
+var request = window.indexedDB.open("scoreDatabase", 1);
+var db = null;
+request.onerror = function(e){
+    alert("Something went wrong!");
+};
+
+request.onupgradeneeded = function(e){
+    db = e.target.result;
+    var os = db.createObjectStore("scores", {keyPath: "region"});
+};
+
+request.onsuccess = function(e){
+    db = e.target.result;
+};
+
+function saveScore(){
+    var score = {
+        region: currentRegion, value: currentScore, date: getCurrentDate()
+    };
+
+    var trans = db.transaction("scores", "readwrite");
+    var os = trans.objectStore("scores");
+    os.add(score);
+
+    console.log("score saved");
+}
+
+function clearScore(){
+    currentRegion = null;
+    currentScore = 0;
+}
+
+function compareScoreRegion(){
+    var trans = db.transaction("scores", "readwrite");
+    var os = trans.objectStore("scores");
+    var objectStore = os.get(currentRegion);
+
+    objectStore.onsuccess = function(e){
+            if(e.target.result != null){
+                if(currentScore > e.target.result.value){
+                    console.log("SCORE MOET VERVANGEN WORDEN");
+                    deleteScoreOfRegion();
+                    saveScore();
+                }
+            } else{
+                saveScore();
+            }
+            clearScore();
+        }
+
+
+}
+function deleteScoreOfRegion(){
+    var trans = db.transaction("scores", "readwrite");
+    var os = trans.objectStore("scores");
+
+    os.delete(currentRegion);
+    console.log("score deleted");
+}
+
+function getScoreRegion(element){
+    var region = element.getAttribute("data-region");
+
+    var trans = db.transaction("scores", "readwrite");
+    var os = trans.objectStore("scores");
+    var objectStore = os.get(region);
+
+    objectStore.onsuccess = function(e){
+        var score = "<div class='score'>";
+        score += "<h2>Highest score</h2>";
+
+        if(e.target.result != undefined){
+            score += "<p>"+ e.target.result.value + " out of 20 questions</p>";
+            score += "<h2>Date created</h2>";
+            score += "<p>" + e.target.result.date + "</p>";
+        } else{
+            score += "<p>None</p>";
+        }
+
+
+
+        score += "</div>";
+        $(element).append(score);
+    }
+}
+
+function showHighscores(){
+    $('#highscores').toggleClass('hide');
+
+    $( "div.highscore" ).each(function( index ) {
+        getScoreRegion(this);
+    });
+}
+
+//Question input
+
+var nameJsonSchema = {
+    "title": "Full name validation",
+    "type": "string",
+    "minLength": 1,
+    "pattern": "^[A-Za-z\\s]*$" //no numbers, special signs
+};
+
+var emailJsonSchema = {
+    "title": "Email validation",
+    "type": "string",
+    "pattern": "^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$",
+    "format": "email"
+};
+
+var phoneJsonSchema = {
+    "title": "Phone validation",
+    "type": "string",
+    "pattern": "^[0-9]{10}$"
+};
+
+function showInputFields(){
+    $('#inputClient').toggleClass("hide");
+}
+
+function handleForm(e){
+    e.preventDefault();
+    var needValidation = [$('#fullName'), $('#email'), $('#phone')];
+    for(var i = 0; i<needValidation.length;i++){
+        if(i == 0) validateField(nameJsonSchema, needValidation[i]);
+        else if(i == 1)validateField(emailJsonSchema, needValidation[i]);
+        else if(i == 2)validateField(phoneJsonSchema, needValidation[i]);
+    }
+
+    if(formErrors != 0){
+        //TO-DO : show errors
+        var errorMessages = "<ul class='bulletPoints'>";
+        formErrorMessages.forEach(function(item, index){
+            errorMessages += "<li>" + item + "</li>";
+        });
+        errorMessages += "</ul>";
+        $('#errorMessages').append(errorMessages);
+    } else{
+        $('#errorMessages').empty();
+        $('#inputClient').toggleClass('hide');
+        $('#options').toggleClass('hide');
+    }
+    formErrorMessages = [];
+    formErrors = 0;
+}
+
+function validateField(schema, field){
+    var ajv = new Ajv();
+    var valid = ajv.validate(schema, $(field).val());
+    if(!valid){
+        console.log(ajv.errors);
+        var labelText = $(field).parent().find("label").text();
+        formErrorMessages.push(labelText + " is not valid.");
+        formErrors++;
+    }
+}
+
+function returnToHomePageFromScores(){
+    $('#highscores').toggleClass('hide');
+    $('#options').toggleClass('hide');
+    $('div.score').remove();
+}
+
+function returnToHomePageFromForm(){
+    $('#inputClient').toggleClass('hide');
+    $('#options').toggleClass('hide');
+}
+
+function returnHomeFromQuestion(){
+    $('div.question').remove();
+    indexQuestion = 0;
+    $('#options').toggleClass('hide');
+}
+
+function returnToHomePageFromRegions(){
+    $('#regions').toggleClass('hide');
+    $('#options').toggleClass('hide');
+}
+
+
+$(document).ready(function(){
+    $('#play').on('click', function(){
+        displayMenu();
+        displayRegions();
+    });
+
+    $('#scores').on('click', function(){
+        displayMenu();
+        showHighscores();
+    });
+
+    $('#question').on('click', function(){
+        displayMenu();
+        showInputFields();
+    });
+
+    $('#returnArrowScores').on('click', returnToHomePageFromScores);
+    $('#returnArrowForm').on('click', returnToHomePageFromForm);
+    $('#returnArrowRegions').on('click', returnToHomePageFromRegions);
+
+    $('#regions figure').on('click', getQuestions);
+
+    $('#questionClient').on('submit', handleForm);
+
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker
+            .register('./service-worker.js')
+            .then(function() { console.log('Service Worker Registered'); });
+    }
+});

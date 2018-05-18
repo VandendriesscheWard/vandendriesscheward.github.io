@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#94BE72">
+    <title>Man of the world</title>
+    <link rel="stylesheet" type="text/css" href="assets/css/reset.css"/>
+    <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/screen.css"/>
+    <link rel="manifest" href="/manifest.json">
+</head>
+<body>
+<div class="wrapper">
+    <div id="options">
+        <img src="images/icon-bordered.png" title="icon" alt="icon">
+        <h1>Man of the world</h1>
+        <button type="button" id="play" class="btn btn-secondary">Play</button>
+        <button type="button" id="scores" class="btn btn-secondary">Scores</button>
+        <button type="button" id="question" class="btn btn-secondary">Question</button>
+    </div>
+    <div id="regions" class="hide">
+        <img src="images/arrow-white.png" id="returnArrowRegions" title="go back arrow" alt="go back arrow"/>
+        <div class="order">
+            <figure data-region="europe"><img src="images/Europe-green.png" alt="Europe" title="Europe">
+              <figcaption>Europe</figcaption>
+          </figure>
+          <figure data-region="africa"><img src="images/Africa-green.png" alt="Africa" title="Africa">
+              <figcaption>Africa</figcaption>
+          </figure>
+          <figure data-region="asia"><img src="images/Asia-green.png" alt="Asia" title="Asia">
+              <figcaption>Asia</figcaption>
+          </figure>
+          <figure data-region="americas"><img src="images/America-green.png" alt="America" title="America">
+              <figcaption>America</figcaption>
+          </figure>
+      </div>
+    </div>
+    <div id="highscores" class="hide">
+        <img src="images/arrow-white.png" id="returnArrowScores" title="go back arrow" alt="go back arrow"/>
+        <div class="highscore" data-region="europe">
+            <figure><img src="images/Europe-white.png" alt="Europe" title="Europe">
+                <figcaption>Europe</figcaption>
+            </figure>
+        </div>
+        <div class="highscore" data-region="africa">
+            <figure><img src="images/Africa-white.png" alt="Africa" title="Africa">
+                <figcaption>Africa</figcaption>
+            </figure>
+        </div>
+        <div class="highscore" data-region="asia">
+            <figure><img src="images/Asia-white.png" alt="Asia" title="Asia">
+                <figcaption>Asia</figcaption>
+            </figure>
+        </div>
+        <div class="highscore" data-region="americas">
+            <figure><img src="images/America-white.png" alt="America" title="America">
+                <figcaption>America</figcaption>
+            </figure>
+        </div>
+    </div>
+    <div id="inputClient" class="hide">
+        <img src="images/arrow-white.png" id="returnArrowForm" title="go back arrow" alt="go back arrow"/>
+        <form id="questionClient">
+            <h1 id="formTitle">Question</h1>
+            <div id="errorMessages"></div>
+            <div class="form-group">
+                <label for="fullName">Full name</label>
+                <input type="text" class="form-control" id="fullName" name="fullName">
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" name="email">
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone number</label>
+                <input type="text" class="form-control" id="phone" name="phone">
+            </div>
+            <div class="form-group">
+                <label for="question">Question:</label>
+                <textarea type="text" rows="5" class="form-control" id="question" name="question"></textarea>
+            </div>
+            <input type="submit" value="Send" class="btn btn-secondary"/>
+        </form>
+    </div>
+</div>
+<script type="text/javascript" src="assets/js/jquery-3.1.1.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/ajv/6.5.0/ajv.min.js"></script>
+<script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="assets/js/script.js"></script>
+</body>
+</html>

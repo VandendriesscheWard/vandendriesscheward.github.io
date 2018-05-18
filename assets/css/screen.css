@@ -1,0 +1,277 @@
+/*---------------------*/
+/*    HTML ELEMENTS    */
+/*---------------------*/
+body{
+    font-size: 1.5rem;
+    background-color: #1684DD;
+    color: #fff;
+}
+
+button{
+  font-size: 2rem;
+}
+#options h1{
+    font-size: 3rem;
+    text-align: center;
+    margin-bottom: 5%;
+}
+
+#returnHomeFromQuestion{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 5%;
+}
+
+img{
+    max-width: 100%;
+}
+figcaption{
+    text-align: center;
+    margin-top: 10px;
+}
+/*---------------------*/
+/*  REUSABLE CLASSES   */
+/*---------------------*/
+.wrapper{
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+
+}
+
+.order{
+    display: flex;
+    flex-wrap:wrap;
+    justify-content: center;
+}
+
+#returnArrowScores,#returnArrowForm,#returnArrowRegions{
+  width: 10%;
+  margin-bottom: 3%;
+  margin-top: 3%;
+}
+
+.hide{
+    display: none;
+}
+div.question{
+    margin-top: 3%;
+}
+
+#options img{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 30%;
+}
+
+.highscore{
+    background-color: #94BE72;
+    display:block;
+    padding:5%;
+    border-radius: 20%;
+
+}
+
+div.highscore figure, div.highscore div{
+    width:50%;
+    display:inline-block;
+}
+
+div.highscore{
+    display: flex;
+    margin-bottom:10%;
+}
+
+div.score h2{
+    font-size:1.4rem;
+}
+
+div.score, div.highscore figure{
+    align-self:center;
+}
+
+div.score p{
+    font-size: 1rem;
+}
+
+div.score{
+    margin-left:4%;
+}
+
+div.highscore figure figcaption{
+    margin-top:0;
+}
+
+.endGame{
+    font-size: 2rem;
+}
+
+.endScore{
+    font-size: 1rem;
+}
+
+#endMessage{
+    text-align:center;
+}
+
+#formTitle{
+    text-align:center;
+    margin-bottom: 6%;
+}
+
+.bulletPoints{
+    list-style-type: square;
+}
+
+#errorMessages ul li{
+    font-size: 1rem;
+
+}
+
+#errorMessages{
+    padding-left: 2%;
+}
+
+input[type='submit']{
+    float:right;
+}
+
+div.question h3{
+    text-align: center;
+    margin-bottom: 2%;
+}
+#currentFlag{
+    display:block;
+    margin:auto;
+    width: 50%;
+    border: 1px solid darkgray;
+
+}
+
+div.question input[type='text']{
+    display:block;
+    margin:auto;
+    margin-top: 3%;
+}
+
+input[type="submit"].btn-secondary, button.btn-secondary{
+    background-color: #94BE72;
+}
+
+/*div.question button{
+    display:block;
+    margin:auto;
+    margin-top: 1%;
+}
+*/
+.textField{
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+.answer{
+    display: block;
+    width: 35%;
+    margin:auto;
+    margin-bottom: 3%;
+}
+
+#possAnswers{
+    text-align: center;
+    margin-top: 5%;
+}
+
+/*---------------------*/
+/* CONTAINING ELEMENTS */
+/*---------------------*/
+
+#options, #regions{
+    margin:auto;
+
+}
+#options button{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 6%;
+    width: 80%;
+    font-size: 1.5rem;
+}
+
+#regions figure{
+    width: 50%;
+    display: inline-block;
+}
+
+#returnHomeFromQuestion{
+  margin-bottom:5%;
+}
+
+
+/*------------------------*/
+/* PAGE SPECIFIC ELEMENTS */
+/*------------------------*/
+@media only screen and (max-width: 600px) {
+    .wrapper{
+        width: 90%;
+    }
+
+    #returnHomeFromQuestion{
+      margin-bottom:10%;
+    }
+
+    #options h1{
+        text-align: center;
+        margin-bottom: 10%;
+        font-size: 2.5rem;
+    }
+
+    figure.trophy{
+      margin-top: 20%;
+    }
+
+    #options img{
+      width: 60%;
+    }
+
+    div.question{
+        margin-top: 5%;
+    }
+
+
+    div.question h3{
+        margin-bottom: 5%;
+        font-size: 1.8rem;
+    }
+
+    div.question input[type='text']{
+        margin-top: 10%;
+    }
+
+    #returnHomeFromQuestion{
+        width: 15%;
+    }
+
+    /*div.question button{
+        margin-top: 5%;
+    }*/
+
+    .order{
+        margin-top: 20%;
+    }
+
+    .answer{
+        font-size: 1.3rem;
+        width: 60%;
+    }
+
+}
