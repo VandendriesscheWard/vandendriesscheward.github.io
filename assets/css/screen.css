@@ -10,18 +10,7 @@ body{
 button{
   font-size: 2rem;
 }
-#options h1{
-    font-size: 3rem;
-    text-align: center;
-    margin-bottom: 5%;
-}
 
-#returnHomeFromQuestion{
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    width: 5%;
-}
 
 img{
     max-width: 100%;
@@ -160,6 +149,10 @@ input[type="submit"].btn-secondary, button.btn-secondary{
     background-color: #94BE72;
 }
 
+input[type="submit"].btn-secondary:hover, button.btn-secondary:hover{
+    background-color: #648946;
+}
+
 /*div.question button{
     display:block;
     margin:auto;
@@ -193,6 +186,19 @@ input[type="submit"].btn-secondary, button.btn-secondary{
 /*---------------------*/
 /* CONTAINING ELEMENTS */
 /*---------------------*/
+
+#options h1{
+    font-size: 3rem;
+    text-align: center;
+    margin-bottom: 5%;
+}
+
+#returnHomeFromQuestion{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 5%;
+}
 
 #options, #regions{
     margin:auto;

@@ -349,6 +349,25 @@ function returnToHomePageFromRegions(){
     $('#options').toggleClass('hide');
 }
 
+function preloadResources(){
+    var resources = [
+      "https://restcountries.eu/rest/v2/region/europe",
+      "https://restcountries.eu/rest/v2/region/asia",
+      "https://restcountries.eu/rest/v2/region/africa",
+      "https://restcountries.eu/rest/v2/region/americas"
+    ]
+
+    resources.forEach(r,i){
+      fetch(r)
+        .then(function(response){
+            response.json()
+              .then(function(responseJson){
+                  responseJson.forEach(q,i){
+                    fetch(q.flag)
+                      .then(function(){
+                        console.log("flag fetched");
+                      });
+    }})})}}
 
 $(document).ready(function(){
     $('#play').on('click', function(){
@@ -377,6 +396,7 @@ $(document).ready(function(){
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker
             .register('./service-worker.js')
-            .then(function() { console.log('Service Worker Registered'); });
+            .then(function() { console.log('Service Worker Registered'); })
+            .then(preloadResources);
     }
 });
