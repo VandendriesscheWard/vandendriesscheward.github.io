@@ -15,6 +15,8 @@ var filesToCache = [
     '/images/icon-bordered.png',
     '/images/home-white.png',
     '/images/imageNotLoaded.png',
+    '/images/correct.png',
+    '/images/incorrect.png',
     '/manifest.json'
 ];
 

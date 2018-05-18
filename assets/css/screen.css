@@ -82,6 +82,16 @@ figcaption{
     margin-bottom: 3%;
 }
 
+.correctAnswer, .correct, .incorrect{
+  text-align:center;
+}
+
+.solutionImage{
+    display:block;
+    margin:auto;
+    width:30%;
+}
+
 
 
 /*---------------------*/
@@ -92,11 +102,21 @@ div.question{
     margin-top: 3%;
 }
 
+#solution{
+  margin-top:10%;
+}
+
+#continue{
+  text-align:center;
+  display:block;
+  margin:auto;
+}
+
 #options img{
   display: block;
   margin-left: auto;
   margin-right: auto;
-  width: 30%;
+  width: 50%;
 }
 
 div.highscore figure, div.highscore div{
@@ -221,7 +241,7 @@ input[type="submit"].btn-secondary:hover, button.btn-secondary:hover{
 }
 
 #returnHomeFromQuestion{
-  margin-bottom:5%;
+  margin-bottom:2%;
 }
 
 
@@ -231,6 +251,11 @@ input[type="submit"].btn-secondary:hover, button.btn-secondary:hover{
 @media only screen and (max-width: 600px) {
     .wrapper{
         width: 90%;
+    }
+
+
+    .solutionImage{
+        width:100%;
     }
 
     .order{
@@ -277,5 +302,39 @@ input[type="submit"].btn-secondary:hover, button.btn-secondary:hover{
 
     #returnHomeFromQuestion{
         width: 15%;
+    }
+}
+
+@media only screen and (min-width: 650px){
+    #options{
+      width: 40%;
+    }
+
+    .highscore{
+      width:50%;
+      margin-left:auto;
+      margin-right:auto;
+    }
+
+    .order{
+      width:50%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    #returnArrowForm, #returnArrowScores, #returnArrowRegions{
+      width:5%;
+    }
+
+    #currentFlag{
+      width: 35%;
+    }
+
+    figure.trophy img{
+      width: 30%;
+    }
+
+    #endMessage{
+      margin-top:10%;
     }
 }

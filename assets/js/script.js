@@ -44,10 +44,10 @@ function setQuestions(questions){
 function displayQuestion(){
     if(selectedCountries != null){
         if(indexQuestion < selectedCountries.length){
-            $('div.question').remove();
+            $('#solution').remove();
             var questionAsDiv = questionToDiv(selectedCountries[indexQuestion]);
             $('div.wrapper').append(questionAsDiv);
-            $('#returnHomeFromQuestion').on('click', returnHomeFromQuestion)
+            $('#returnHomeFromQuestion').on('click', returnHomeFromQuestion);
             setEventHandlerQuestion();
         } else{
             //game finished
@@ -84,10 +84,32 @@ function checkInput(){
     var answer = $(this).text().toLowerCase();
 
     if(solution === answer){
+        showSolution("correct", answer);
         currentScore++;
+    } else{
+      showSolution("incorrect", answer);
     }
     indexQuestion++;
-    displayQuestion();
+}
+
+function showSolution(status, answer){
+    $('div.question').remove();
+    var solution = "<div id='solution'>";
+    solution += "<img src='images/home-white.png' id='returnHomeFromQuestion' title='home button' alt='home button'/>";
+    if(status === "correct") {
+      solution += "<img src='images/correct.png' class='solutionImage' title='correct answer' alt='correct answer'/>";
+      solution += "<h2 class='correct'>CORRECT!</h2>";
+    } else{
+      solution += "<img src='images/incorrect.png' class='solutionImage' title='incorrect answer' alt='incorrect answer'/>";
+      solution += "<h2 class='incorrect'>INCORRECT</h2>";
+      solution += "<p class='correctAnswer'>Solution: " + answer + "</p>";
+    }
+    solution += "<button id='continue' class='btn btn-secondary'>Continue</button>";
+    solution += "</div>";
+    $('div.wrapper').append(solution);
+    
+    $('#returnHomeFromQuestion').on('click', returnHomeFromQuestion);
+    $('#continue').on('click',displayQuestion);
 }
 
 function getPossibleAnswers(){
@@ -100,7 +122,7 @@ function getPossibleAnswers(){
 }
 
 function showEndMessage(){
-    $('div.question').remove();
+    $('#solution').remove();
 
     var message = "<div id='endMessage'>";
     message += "<figure class='trophy'><img src='images/trophy.png' alt='trophy' title='trophy'/>";
