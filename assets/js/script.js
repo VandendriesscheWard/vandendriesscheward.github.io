@@ -9,13 +9,16 @@ var currentRegion;
 var formErrors = 0;
 var formErrorMessages = [];
 
-function displayMenu(){
+function toggleMenu(){
     $('#options').toggleClass('hide');
 }
 
-function displayRegions(){
+function toggleRegions(){
     $('#regions').toggleClass('hide');
 }
+
+
+//QUESTIONS ZONE
 
 function getQuestions(){
     currentRegion = $(this).attr("data-region");
@@ -32,11 +35,9 @@ function getQuestions(){
 }
 
 function setQuestions(questions){
-    console.log(questions);
     selectedCountries = getRandom(questions,20);
     selectedCountries = selectedCountries.map(removeUnnessecaryInformation);
-    console.log(selectedCountries);
-    displayRegions();
+    toggleRegions();
     displayQuestion();
 }
 
@@ -54,36 +55,6 @@ function displayQuestion(){
             showEndMessage();
         }
     }
-}
-
-function showEndMessage(){
-    $('div.question').remove();
-
-    var message = "<div id='endMessage'>";
-    message += "<figure class='trophy'><img src='images/trophy.png' alt='trophy' title='trophy'/>";
-    message += "<figcaption class='endGame'>Congratulations!</figcaption>";
-    message += "</figure>";
-    message += "<p class='endScore'>You scored " + currentScore + " out of 20 questions</p>";
-    message += "<button type='button' class='btn btn-secondary' id='homeButton' name='homeButton'>Home</button>";
-    message += "</div>";
-
-    $('div.wrapper').append(message);
-
-    $('#homeButton').on('click', function(){
-        $('#endMessage').remove();
-        indexQuestion = 0;
-        $('#options').toggleClass("hide");
-    })
-
-}
-
-function getPossibleAnswers(){
-    var answers = getRandom(selectedCountries, 4);
-    var goodAnswer = selectedCountries[indexQuestion];
-    while(answers.indexOf(goodAnswer) < 0){
-        answers = getRandom(selectedCountries, 4);
-    }
-    return answers;
 }
 
 function questionToDiv(question){
@@ -119,6 +90,35 @@ function checkInput(){
     displayQuestion();
 }
 
+function getPossibleAnswers(){
+    var answers = getRandom(selectedCountries, 4);
+    var goodAnswer = selectedCountries[indexQuestion];
+    while(answers.indexOf(goodAnswer) < 0){
+        answers = getRandom(selectedCountries, 4);
+    }
+    return answers;
+}
+
+function showEndMessage(){
+    $('div.question').remove();
+
+    var message = "<div id='endMessage'>";
+    message += "<figure class='trophy'><img src='images/trophy.png' alt='trophy' title='trophy'/>";
+    message += "<figcaption class='endGame'>Congratulations!</figcaption>";
+    message += "</figure>";
+    message += "<p class='endScore'>You scored " + currentScore + " out of 20 questions</p>";
+    message += "<button type='button' class='btn btn-secondary' id='homeButton' name='homeButton'>Home</button>";
+    message += "</div>";
+
+    $('div.wrapper').append(message);
+
+    $('#homeButton').on('click', function(){
+        $('#endMessage').remove();
+        indexQuestion = 0;
+        $('#options').toggleClass("hide");
+    })
+
+}
 
 function getRandom(arr, n) {
     var result = new Array(n),
@@ -144,23 +144,7 @@ function getImage(flagUrl, name){
     return img;
 }
 
-function getCurrentDate(){
-    var today = new Date();
-    var dd = today.getDate();
-    var mm = today.getMonth()+1; //January is 0!
-    var yyyy = today.getFullYear();
 
-    if(dd<10) {
-        dd = '0'+dd
-    }
-
-    if(mm<10) {
-        mm = '0'+mm
-    }
-
-    today = dd + '/' + mm + '/' + yyyy;
-    return today;
-}
 
 //Indexed DB
 
@@ -184,6 +168,8 @@ request.onupgradeneeded = function(e){
 request.onsuccess = function(e){
     db = e.target.result;
 };
+
+//HIGHSCORES
 
 function saveScore(){
     var score = {
@@ -256,6 +242,24 @@ function getScoreRegion(element){
     }
 }
 
+function getCurrentDate(){
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1; //January is 0!
+    var yyyy = today.getFullYear();
+
+    if(dd<10) {
+        dd = '0'+dd
+    }
+
+    if(mm<10) {
+        mm = '0'+mm
+    }
+
+    today = dd + '/' + mm + '/' + yyyy;
+    return today;
+}
+
 function showHighscores(){
     $('#highscores').toggleClass('hide');
 
@@ -264,8 +268,7 @@ function showHighscores(){
     });
 }
 
-//Question input
-
+//FORM & JSON SCHEMA
 var nameJsonSchema = {
     "title": "Full name validation",
     "type": "string",
@@ -327,6 +330,8 @@ function validateField(schema, field){
     }
 }
 
+//NAVIGATING
+
 function returnToHomePageFromScores(){
     $('#highscores').toggleClass('hide');
     $('#options').toggleClass('hide');
@@ -348,6 +353,8 @@ function returnToHomePageFromRegions(){
     $('#regions').toggleClass('hide');
     $('#options').toggleClass('hide');
 }
+
+//RESOURCE LOADING
 
 function preloadResources() {
     var resources = [
@@ -374,26 +381,24 @@ function preloadResources() {
 
 $(document).ready(function(){
     $('#play').on('click', function(){
-        displayMenu();
-        displayRegions();
+        toggleMenu();
+        ToggleRegions();
     });
 
     $('#scores').on('click', function(){
-        displayMenu();
+        toggleMenu();
         showHighscores();
     });
 
     $('#question').on('click', function(){
-        displayMenu();
+        toggleMenu();
         showInputFields();
     });
 
     $('#returnArrowScores').on('click', returnToHomePageFromScores);
     $('#returnArrowForm').on('click', returnToHomePageFromForm);
     $('#returnArrowRegions').on('click', returnToHomePageFromRegions);
-
     $('#regions figure').on('click', getQuestions);
-
     $('#questionClient').on('submit', handleForm);
 
     if ('serviceWorker' in navigator) {
