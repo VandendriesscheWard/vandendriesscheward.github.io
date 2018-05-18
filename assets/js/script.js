@@ -382,7 +382,7 @@ function preloadResources() {
 $(document).ready(function(){
     $('#play').on('click', function(){
         toggleMenu();
-        ToggleRegions();
+        toggleRegions();
     });
 
     $('#scores').on('click', function(){
