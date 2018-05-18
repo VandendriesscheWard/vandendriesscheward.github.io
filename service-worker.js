@@ -13,11 +13,9 @@ var filesToCache = [
     '/assets/css/bootstrap.min.css',
     '/assets/css/screen.css',
     '/images/icon-bordered.png',
-    '/manifest.json',
-    'https://restcountries.eu/rest/v2/region/europe',
-    'https://restcountries.eu/rest/v2/region/americas',
-    'https://restcountries.eu/rest/v2/region/asia',
-    'https://restcountries.eu/rest/v2/region/africa'
+    '/images/home-white.png',
+    '/images/imageNotLoaded.png',
+    '/manifest.json'
 ];
 
 self.addEventListener('install', function(e) {

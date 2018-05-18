@@ -365,10 +365,7 @@ function preloadResources() {
                     .then(function (responseJson) {
                         responseJson.forEach(function(q, i)
                         {
-                            fetch(q.flag)
-                                .then(function () {
-                                    console.log("flag fetched");
-                                });
+                            fetch(q.flag); //in every question there is one flag that needs to be fetched
                         })
                     })
             })
