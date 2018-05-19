@@ -84,10 +84,10 @@ function checkInput(){
     var answer = $(this).text().toLowerCase();
 
     if(solution === answer){
-        showSolution("correct", answer);
+        showSolution("correct", solution);
         currentScore++;
     } else{
-      showSolution("incorrect", answer);
+      showSolution("incorrect", solution);
     }
     indexQuestion++;
 }
