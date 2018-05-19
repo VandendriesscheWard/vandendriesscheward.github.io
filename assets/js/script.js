@@ -412,7 +412,7 @@ $(document).ready(function(){
         showHighscores();
     });
 
-    $('#question').on('click', function(){
+    $('#insertQuestion').on('click', function(){
         toggleMenu();
         showInputFields();
     });
