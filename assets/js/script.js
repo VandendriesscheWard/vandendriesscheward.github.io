@@ -107,8 +107,8 @@ function showSolution(status, answer){
     solution += "<button id='continue' class='btn btn-secondary'>Continue</button>";
     solution += "</div>";
     $('div.wrapper').append(solution);
-    
-    $('#returnHomeFromQuestion').on('click', returnHomeFromQuestion);
+
+    $('#returnHomeFromQuestion').on('click', returnHomeFromSolution);
     $('#continue').on('click',displayQuestion);
 }
 
@@ -366,6 +366,13 @@ function returnToHomePageFromForm(){
 }
 
 function returnHomeFromQuestion(){
+    $('div.question').remove();
+    indexQuestion = 0;
+    $('#options').toggleClass('hide');
+}
+
+function returnHomeFromSolution(){
+    $('#solution').remove();
     $('div.question').remove();
     indexQuestion = 0;
     $('#options').toggleClass('hide');
