@@ -2,21 +2,11 @@
  * Created by WardVdd on 22/03/2017.
  */
 var selectedCountries = null;
-var questions = null;
 var indexQuestion = 0;
 var currentScore = 0;
 var currentRegion;
 var formErrors = 0;
 var formErrorMessages = [];
-
-function toggleMenu(){
-    $('#options').toggleClass('hide');
-}
-
-function toggleRegions(){
-    $('#regions').toggleClass('hide');
-}
-
 
 //QUESTIONS ZONE
 
@@ -29,6 +19,7 @@ function getQuestions(){
     fetch(url)
         .then(function(response) {
             response.json().then(function(responseJson) {
+                console.log(responseJson);
                 setQuestions(responseJson);
             });
         });
@@ -36,7 +27,9 @@ function getQuestions(){
 
 function setQuestions(questions){
     selectedCountries = getRandom(questions,20);
-    selectedCountries = selectedCountries.map(removeUnnessecaryInformation);
+    selectedCountries = selectedCountries
+                            .map(removeUnnessecaryInformation)
+                            .map(correctLongNames);
     toggleRegions();
     displayQuestion();
 }
@@ -70,7 +63,6 @@ function questionToDiv(question){
     div += "</div>";
     div += "</div>";
 
-
     return div;
 }
 
@@ -87,15 +79,17 @@ function checkInput(){
         showSolution("correct", solution);
         currentScore++;
     } else{
-      showSolution("incorrect", solution);
+        showSolution("incorrect", solution);
     }
     indexQuestion++;
 }
 
 function showSolution(status, answer){
     $('div.question').remove();
+
     var solution = "<div id='solution'>";
     solution += "<img src='images/home-white.png' id='returnHomeFromQuestion' title='home button' alt='home button'/>";
+
     if(status === "correct") {
       solution += "<img src='images/correct.png' class='solutionImage' title='correct answer' alt='correct answer'/>";
       solution += "<h2 class='correct'>CORRECT!</h2>";
@@ -104,8 +98,10 @@ function showSolution(status, answer){
       solution += "<h2 class='incorrect'>INCORRECT</h2>";
       solution += "<p class='correctAnswer'>Solution: " + answer + "</p>";
     }
+
     solution += "<button id='continue' class='btn btn-secondary'>Continue</button>";
     solution += "</div>";
+
     $('div.wrapper').append(solution);
 
     $('#returnHomeFromQuestion').on('click', returnHomeFromSolution);
@@ -161,12 +157,23 @@ function removeUnnessecaryInformation(item){
     return updatedItem;
 }
 
+function correctLongNames(item){
+    var itemSplittedOnSpace = item.name.split(" ");
+    if(itemSplittedOnSpace.length > 1){
+        if(itemSplittedOnSpace[1] === "and" || itemSplittedOnSpace[1] === "of" || itemSplittedOnSpace[1][0] === "(")
+        {
+            item.name = itemSplittedOnSpace[0];
+        } else{
+            item.name = itemSplittedOnSpace[0] + " " + itemSplittedOnSpace[1];
+        }
+    }
+    return item;
+}
+
 function getImage(flagUrl, name){
     var img = "<img id='currentFlag' src='" + flagUrl + "' alt='flag'>";
     return img;
 }
-
-
 
 //Indexed DB
 
@@ -178,6 +185,7 @@ window.indexedDB =
 
 var request = window.indexedDB.open("scoreDatabase", 1);
 var db = null;
+
 request.onerror = function(e){
     alert("Something went wrong!");
 };
@@ -218,7 +226,7 @@ function compareScoreRegion(){
     objectStore.onsuccess = function(e){
             if(e.target.result != null){
                 if(currentScore > e.target.result.value){
-                    console.log("SCORE MOET VERVANGEN WORDEN");
+                    //score moet vervangen worden
                     deleteScoreOfRegion();
                     saveScore();
                 }
@@ -227,15 +235,12 @@ function compareScoreRegion(){
             }
             clearScore();
         }
-
-
 }
 function deleteScoreOfRegion(){
     var trans = db.transaction("scores", "readwrite");
     var os = trans.objectStore("scores");
 
     os.delete(currentRegion);
-    console.log("score deleted");
 }
 
 function getScoreRegion(element){
@@ -256,8 +261,6 @@ function getScoreRegion(element){
         } else{
             score += "<p>None</p>";
         }
-
-
 
         score += "</div>";
         $(element).append(score);
@@ -295,7 +298,7 @@ var nameJsonSchema = {
     "title": "Full name validation",
     "type": "string",
     "minLength": 1,
-    "pattern": "^[A-Za-z\\s]*$" //no numbers, special signs
+    "pattern": "^[A-Za-z\\s]*$"
 };
 
 var emailJsonSchema = {
@@ -311,21 +314,29 @@ var phoneJsonSchema = {
     "pattern": "^[0-9]{10}$"
 };
 
+var questionJsonSchema = {
+    //de textarea mag simpelweg gewoon niet leeg gelaten worden
+    "title": "Question validation",
+    "minLength": 1
+};
+
 function showInputFields(){
     $('#inputClient').toggleClass("hide");
 }
 
 function handleForm(e){
     e.preventDefault();
-    var needValidation = [$('#fullName'), $('#email'), $('#phone')];
+    $('ul.bulletPoints').remove();
+
+    var needValidation = [$('#fullName'), $('#email'), $('#phone'), $('#question')];
     for(var i = 0; i<needValidation.length;i++){
         if(i == 0) validateField(nameJsonSchema, needValidation[i]);
         else if(i == 1)validateField(emailJsonSchema, needValidation[i]);
         else if(i == 2)validateField(phoneJsonSchema, needValidation[i]);
+        else if(i == 3)validateField(questionJsonSchema, needValidation[i]);
     }
 
     if(formErrors != 0){
-        //TO-DO : show errors
         var errorMessages = "<ul class='bulletPoints'>";
         formErrorMessages.forEach(function(item, index){
             errorMessages += "<li>" + item + "</li>";
@@ -353,6 +364,14 @@ function validateField(schema, field){
 }
 
 //NAVIGATING
+
+function toggleMenu(){
+    $('#options').toggleClass('hide');
+}
+
+function toggleRegions(){
+    $('#regions').toggleClass('hide');
+}
 
 function returnToHomePageFromScores(){
     $('#highscores').toggleClass('hide');
@@ -387,13 +406,23 @@ function returnToHomePageFromRegions(){
 
 function preloadResources() {
     var resources = [
+        '/images/home-white.png',
+        '/images/imageNotLoaded.png',
+        '/images/correct.png',
+        '/images/incorrect.png'
+    ];
+    var apiResources = [
         "https://restcountries.eu/rest/v2/region/europe",
         "https://restcountries.eu/rest/v2/region/asia",
         "https://restcountries.eu/rest/v2/region/africa",
         "https://restcountries.eu/rest/v2/region/americas"
     ];
 
-    resources.forEach(function(r, i)
+    resources.forEach(function(r,i){
+        fetch(r);
+    });
+
+    apiResources.forEach(function(r, i)
     {
         fetch(r)
             .then(function (response) {
