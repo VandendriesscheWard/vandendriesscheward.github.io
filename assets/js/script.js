@@ -19,7 +19,6 @@ function getQuestions(){
     fetch(url)
         .then(function(response) {
             response.json().then(function(responseJson) {
-                console.log(responseJson);
                 setQuestions(responseJson);
             });
         });
