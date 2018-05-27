@@ -244,6 +244,14 @@ input[type="submit"].btn-secondary:hover, button.btn-secondary:hover{
   margin-bottom:2%;
 }
 
+figure[data-region="asia"]{
+    margin-top:auto;
+}
+
+figure[data-region="asia"] img{
+    margin-bottom:25%;
+}
+
 
 /*-------------------------*/
 /* -----MEDIA QUERIES----- */

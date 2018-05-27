@@ -355,7 +355,6 @@ function validateField(schema, field){
     var ajv = new Ajv();
     var valid = ajv.validate(schema, $(field).val());
     if(!valid){
-        console.log(ajv.errors);
         var labelText = $(field).parent().find("label").text();
         formErrorMessages.push(labelText + " is not valid.");
         formErrors++;
