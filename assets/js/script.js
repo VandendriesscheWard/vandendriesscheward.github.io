@@ -407,6 +407,14 @@ function preloadResources() {
         '/images/home-white.png',
         '/images/imageNotLoaded.png',
         '/images/correct.png',
+        '/images/Africa-green.png',
+        '/images/America-green.png',
+        '/images/Europe-green.png',
+        '/Asia-green.png',
+        '/images/Africa-white.png',
+        '/images/America-white.png',
+        '/images/Europe-white.png',
+        '/Asia-white.png',
         '/images/incorrect.png',
         '/images/trophy.png'
     ];
@@ -417,17 +425,17 @@ function preloadResources() {
         "https://restcountries.eu/rest/v2/region/americas"
     ];
 
-    resources.forEach(function(r,i){
+    resources.forEach(function(r){
         fetch(r);
     });
 
-    apiResources.forEach(function(r, i)
+    apiResources.forEach(function(r)
     {
         fetch(r)
             .then(function (response) {
                 response.json()
                     .then(function (responseJson) {
-                        responseJson.forEach(function(q, i)
+                        responseJson.forEach(function(q)
                         {
                             fetch(q.flag); //in every question there is one flag that needs to be fetched
                         })
