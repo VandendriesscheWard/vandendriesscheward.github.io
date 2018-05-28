@@ -7,6 +7,7 @@ var currentScore = 0;
 var currentRegion;
 var formErrors = 0;
 var formErrorMessages = [];
+var cacheName = 'manOfTheWorld';
 
 //QUESTIONS ZONE
 
@@ -425,8 +426,9 @@ function preloadResources() {
         "https://restcountries.eu/rest/v2/region/americas"
     ];
 
-    resources.forEach(function(r){
-        fetch(r);
+    caches.open(cacheName).then((cache) => {
+        cache.addAll(resources);
+        cache.addAll(apiResources);
     });
 
     apiResources.forEach(function(r)
@@ -437,7 +439,14 @@ function preloadResources() {
                     .then(function (responseJson) {
                         responseJson.forEach(function(q)
                         {
-                            fetch(q.flag); //in every question there is one flag that needs to be fetched
+                            caches.open(cacheName).then((cache) => {
+                                fetch(q.flag).then(function(response){
+                                    if(!response.ok){
+                                        throw new TypeError('bad response status');
+                                    }
+                                    return cache.put(q.flag, response);
+                                })
+                            });
                         })
                     })
             })
@@ -470,6 +479,9 @@ $(document).ready(function(){
         navigator.serviceWorker
             .register('./service-worker.js')
             .then(function() { console.log('Service Worker Registered'); })
-            .then(preloadResources);
+            .then(preloadResources)
+            .catch(function (err) {
+                console.log('SW registration failed', err)
+            });
     }
 });
