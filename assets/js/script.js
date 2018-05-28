@@ -410,11 +410,11 @@ function preloadResources() {
         '/images/Africa-green.png',
         '/images/America-green.png',
         '/images/Europe-green.png',
-        '/Asia-green.png',
+        '/images/Asia-green.png',
         '/images/Africa-white.png',
         '/images/America-white.png',
         '/images/Europe-white.png',
-        '/Asia-white.png',
+        '/images/Asia-white.png',
         '/images/incorrect.png',
         '/images/trophy.png'
     ];
