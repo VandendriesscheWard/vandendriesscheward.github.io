@@ -407,7 +407,8 @@ function preloadResources() {
         '/images/home-white.png',
         '/images/imageNotLoaded.png',
         '/images/correct.png',
-        '/images/incorrect.png'
+        '/images/incorrect.png',
+        '/images/trophy.png'
     ];
     var apiResources = [
         "https://restcountries.eu/rest/v2/region/europe",
