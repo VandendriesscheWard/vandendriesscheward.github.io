@@ -22,6 +22,9 @@ function getQuestions(){
             response.json().then(function(responseJson) {
                 setQuestions(responseJson);
             });
+        })
+        .catch(function(err){
+            console.log("Failed to fetch", err);
         });
 }
 
@@ -404,6 +407,7 @@ function returnToHomePageFromRegions(){
 //RESOURCE LOADING
 
 function preloadResources() {
+
     var resources = [
         '/images/home-white.png',
         '/images/imageNotLoaded.png',
@@ -442,6 +446,7 @@ function preloadResources() {
                             caches.open(cacheName).then((cache) => {
                                 fetch(q.flag).then(function(response){
                                     if(!response.ok){
+                                        console.log("not okey");
                                         throw new TypeError('bad response status');
                                     }
                                     return cache.put(q.flag, response);

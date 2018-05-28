@@ -6,17 +6,15 @@ var cacheName = 'manOfTheWorld';
 var filesToCache = [
     '/',
     '/index.html',
-    '/assets/js/bootstrap.min.js',
-    '/assets/js/jquery-3.1.1.min.js',
-    '/assets/js/script.js',
+    '/assets/js/assets/js/script.js',
+    '/assets/js/assets/js/jquery-3.1.1.min.js',
+    '/assets/js/assets/js/ajv-min.js',
+    '/assets/js/assets/js/bootstrap.min.js',
     '/assets/css/reset.css',
-    '/assets/css/bootstrap.min.css',
     '/assets/css/screen.css',
+    '/assets/css/bootstrap.min.css',
+    '/assets/js/bundle.js',
     '/images/icon-bordered.png',
-    '/images/home-white.png',
-    '/images/imageNotLoaded.png',
-    '/images/correct.png',
-    '/images/incorrect.png',
     '/manifest.json'
 ];
 
@@ -45,12 +43,11 @@ self.addEventListener('activate', function(e) {
     e.waitUntil(
         caches.keys().then(function(keyList) {
             return Promise.all(keyList.map(function(key) {
-                if (key !== cacheName) {
+                if (cacheName.indexOf(key) === -1) {
                     console.log('[ServiceWorker] Removing old cache', key);
                     return caches.delete(key);
                 }
             }));
         })
     );
-    //return self.clients.claim();
 });
