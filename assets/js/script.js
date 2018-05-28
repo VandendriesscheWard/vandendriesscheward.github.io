@@ -430,33 +430,44 @@ function preloadResources() {
         "https://restcountries.eu/rest/v2/region/americas"
     ];
 
-    caches.open(cacheName).then((cache) => {
+    /*resources.forEach(function(a){
+        fetch(a);
+    });*/
+
+    caches.open(cacheName).then(function(cache) {
         cache.addAll(resources);
         cache.addAll(apiResources);
     });
-
+    
     apiResources.forEach(function(r)
     {
+
         fetch(r)
             .then(function (response) {
                 response.json()
                     .then(function (responseJson) {
                         responseJson.forEach(function(q)
                         {
-                            caches.open(cacheName).then((cache) => {
-                                fetch(q.flag).then(function(response){
-                                    if(!response.ok){
-                                        console.log("not okey");
-                                        throw new TypeError('bad response status');
-                                    }
-                                    return cache.put(q.flag, response);
-                                })
-                            });
+                            preloadFlag(q.flag);
                         })
                     })
             })
+    });
+
+}
+
+function preloadFlag(flagUrl){
+    caches.open(cacheName).then(function(cache) {
+        fetch(flagUrl).then(function(response){
+            if(!response.ok){
+                throw new TypeError('bad response status');
+            }
+            return cache.put(flagUrl, response);
+        })
     })
 }
+
+
 
 $(document).ready(function(){
     $('#play').on('click', function(){
@@ -484,7 +495,8 @@ $(document).ready(function(){
         navigator.serviceWorker
             .register('./service-worker.js')
             .then(function() { console.log('Service Worker Registered'); })
-            .then(preloadResources)
+            .then(function(){
+                preloadResources();})
             .catch(function (err) {
                 console.log('SW registration failed', err)
             });
