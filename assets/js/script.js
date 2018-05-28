@@ -8,6 +8,7 @@ var currentRegion;
 var formErrors = 0;
 var formErrorMessages = [];
 var cacheName = 'manOfTheWorld';
+var questionsAsDivElements = [];
 
 //QUESTIONS ZONE
 
@@ -33,6 +34,7 @@ function setQuestions(questions){
     selectedCountries = selectedCountries
                             .map(removeUnnessecaryInformation)
                             .map(correctLongNames);
+    questionsToDiv(selectedCountries);
     toggleRegions();
     displayQuestion();
 }
@@ -41,32 +43,36 @@ function displayQuestion(){
     if(selectedCountries != null){
         if(indexQuestion < selectedCountries.length){
             $('#solution').remove();
-            var questionAsDiv = questionToDiv(selectedCountries[indexQuestion]);
+            var questionAsDiv = questionsAsDivElements[indexQuestion];
             $('div.wrapper').append(questionAsDiv);
             $('#returnHomeFromQuestion').on('click', returnHomeFromQuestion);
             setEventHandlerQuestion();
         } else{
             //game finished
+            questionsAsDivElements = [];
             compareScoreRegion();
             showEndMessage();
         }
     }
 }
 
-function questionToDiv(question){
-    var possibleAnswers = getPossibleAnswers();
-    var div = "<div class='question'>";
-    div += "<img src='images/home-white.png' id='returnHomeFromQuestion' title='home button' alt='home button'/>";
-    div += "<h3>Question " + (indexQuestion + 1) + " of " + selectedCountries.length + "</h3>";
-    div += question.img;
-    div += "<div id=possAnswers>";
-    for(var i = 0; i < possibleAnswers.length; i++){
-        div += "<button type='button' class='btn btn-secondary answer'>" + possibleAnswers[i].name + "</button>";
-    }
-    div += "</div>";
-    div += "</div>";
+function questionsToDiv(questionsArray){
+    questionsArray.forEach(function(q,idx){
+        var possibleAnswers = getPossibleAnswers(idx);
+        var div = "<div class='question'>";
+        div += "<img src='images/home-white.png' id='returnHomeFromQuestion' title='home button' alt='home button'/>";
+        div += "<h3>Question " + (questionsAsDivElements.length + 1) + " of " + selectedCountries.length + "</h3>";
+        div += q.img;
+        div += "<div id=possAnswers>";
+        for(var i = 0; i < possibleAnswers.length; i++){
+            div += "<button type='button' class='btn btn-secondary answer'>" + possibleAnswers[i].name + "</button>";
+        }
+        div += "</div>";
+        div += "</div>";
 
-    return div;
+        questionsAsDivElements.push(div);
+    });
+
 }
 
 function setEventHandlerQuestion(){
@@ -111,13 +117,14 @@ function showSolution(status, answer){
     $('#continue').on('click',displayQuestion);
 }
 
-function getPossibleAnswers(){
+function getPossibleAnswers(idx){
     var answers = getRandom(selectedCountries, 4);
-    var goodAnswer = selectedCountries[indexQuestion];
+    var goodAnswer = selectedCountries[idx];
     while(answers.indexOf(goodAnswer) < 0){
         answers = getRandom(selectedCountries, 4);
     }
     return answers;
+
 }
 
 function showEndMessage(){
@@ -387,6 +394,7 @@ function returnToHomePageFromForm(){
 }
 
 function returnHomeFromQuestion(){
+    questionsAsDivElements = [];
     $('div.question').remove();
     indexQuestion = 0;
     $('#options').toggleClass('hide');
@@ -438,10 +446,9 @@ function preloadResources() {
         cache.addAll(resources);
         cache.addAll(apiResources);
     });
-    
+
     apiResources.forEach(function(r)
     {
-
         fetch(r)
             .then(function (response) {
                 response.json()

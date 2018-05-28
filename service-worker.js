@@ -6,14 +6,8 @@ var cacheName = 'manOfTheWorld';
 var filesToCache = [
     '/',
     '/index.html',
-    '/assets/js/script.js',
-    '/assets/js/jquery-3.1.1.min.js',
-    '/assets/js/ajv-min.js',
-    '/assets/js/bootstrap.min.js',
-    '/assets/css/reset.css',
-    '/assets/css/screen.css',
-    '/assets/css/bootstrap.min.css',
     '/assets/js/bundle.js',
+    '/assets/css/style.css',
     '/images/icon-bordered.png',
     '/manifest.json'
 ];
