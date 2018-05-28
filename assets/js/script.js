@@ -163,8 +163,7 @@ function getRandom(arr, n) {
 }
 
 function removeUnnessecaryInformation(item){
-    var updatedItem = {name: item.name, flag: item.flag, img: getImage(item.flag, item.name)};
-    return updatedItem;
+    return {name: item.name, flag: item.flag, img: getImage(item.flag, item.name)};
 }
 
 function correctLongNames(item){
@@ -181,8 +180,7 @@ function correctLongNames(item){
 }
 
 function getImage(flagUrl, name){
-    var img = "<img id='currentFlag' src='" + flagUrl + "' alt='flag'>";
-    return img;
+    return "<img id='currentFlag' src='" + flagUrl + "' alt='flag'>";
 }
 
 //Indexed DB
@@ -429,7 +427,8 @@ function preloadResources() {
         '/images/Europe-white.png',
         '/images/Asia-white.png',
         '/images/incorrect.png',
-        '/images/trophy.png'
+        '/images/trophy.png',
+        '/images/arrow-white.png'
     ];
     var apiResources = [
         "https://restcountries.eu/rest/v2/region/europe",
@@ -438,10 +437,7 @@ function preloadResources() {
         "https://restcountries.eu/rest/v2/region/americas"
     ];
 
-    /*resources.forEach(function(a){
-        fetch(a);
-    });*/
-
+    //offline cache api
     caches.open(cacheName).then(function(cache) {
         cache.addAll(resources);
         cache.addAll(apiResources);
@@ -460,7 +456,6 @@ function preloadResources() {
                     })
             })
     });
-
 }
 
 function preloadFlag(flagUrl){
@@ -473,8 +468,6 @@ function preloadFlag(flagUrl){
         })
     })
 }
-
-
 
 $(document).ready(function(){
     $('#play').on('click', function(){
